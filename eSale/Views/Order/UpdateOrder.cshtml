@@ -112,7 +112,8 @@
             <td></td>
             <td>
                 <input type="submit" value="存檔" />
-                @Html.ActionLink("回前一頁", "Index")
+                <input type="button" onclick="javascript:window.history.go(-1);" value="回前一頁">
+                @*@Html.ActionLink("回前一頁", "Index")*@
             </td>
             <td>總額</td>
             <td id="total"></td>
