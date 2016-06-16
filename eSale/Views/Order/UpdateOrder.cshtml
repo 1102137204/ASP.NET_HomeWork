@@ -134,6 +134,7 @@
             {
                 <tr>
                     @*<td>@Html.DropDownListFor(m => m.OrderDetails[i].ProductId, (List<SelectListItem>)ViewBag.ProductCodeData, new { @class = "ProductId setOptionSelected", id = "rpc" + Model.OrderDetails[i].ProductId })</td>*@
+                    @**<td>@Html.DropDownListFor(m => m.OrderDetails[i].ProductId, (SelectList)ViewBag.ProductCodeData, new { @class = "ProductId setOptionSelected" })</td>*@
                     <td>@Html.DropDownListFor(m => m.OrderDetails[i].ProductId, new SelectList(ViewBag.ProductCodeData, "Value", "Text", Model.OrderDetails[i].ProductId), new { @class = "ProductId setOptionSelected" })</td>
                     <td>@Html.TextBoxFor(m => m.OrderDetails[i].UnitPrice, new { @class = "UnitPrice", @onchange = "onchangeValue(this)", type = "number" })</td>
                     <td>@Html.TextBoxFor(m => m.OrderDetails[i].Qty, new { @class = "Qty", @onchange = "onchangeValue(this)", type = "number" })</td>
@@ -211,7 +212,7 @@
                 sum += $('.Qty').eq(i).val() * $('.UnitPrice').eq(i).val();
             }
             $("#total").html(sum);
-            //console.log(sum+"rrr");
+            //console.log(sum);
         }
 
     </script>
