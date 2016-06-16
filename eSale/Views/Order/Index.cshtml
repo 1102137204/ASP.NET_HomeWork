@@ -1,0 +1,104 @@
+﻿@model eSale.Models.OrderSearchArg
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutPage1.cshtml";
+}
+<h2>訂單查詢</h2>
+@using (Html.BeginForm("Index", "Order", FormMethod.Post, new { id="Form1"}))
+{
+    <div id="SearchConditionSection">
+        <table class="table table-bordered">
+            <tr>
+                <td>訂單編號</td>
+                <td>
+                    @Html.TextBoxFor(model => model.OrderId)
+
+                </td>
+            </tr>
+            <tr>
+                <td>客戶名稱</td>
+                <td>
+                    @Html.TextBoxFor(model => model.CustName)
+
+                </td>
+            </tr>
+            <tr>
+                <td>負責員工</td>
+                <td>
+                    @Html.DropDownListFor(model => model.EmpId, (List<SelectListItem>)ViewBag.EmpCodeData)
+                </td>
+            </tr>
+            <tr>
+                <td>訂購日期</td>
+                <td>
+                    @Html.TextBoxFor(model => model.OrderDate, new { @type = "date" })
+                </td>
+            </tr>
+
+            <tr>
+                <td></td>
+                <td>
+                    <input type="submit" value="查詢" />
+                    <input type="reset" value="清除" />
+                    @Html.ActionLink("新增訂單", "InsertOrder")
+                </td>
+
+            </tr>
+        </table>
+    </div>
+
+    <div id="SearchResultSection">
+
+        
+            @if (ViewBag.SearchResult != null)
+            {
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <td>訂單編號</td>
+                        <td>客戶名稱</td>
+                        <td>訂購日期</td>
+                        <td>發貨日期</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    @foreach (var item in (List<eSale.Models.Order>)ViewBag.SearchResult)
+                    {
+                        <tr id='@item.OrderId'>
+                            <td>@item.OrderId</td>
+                            <td>@item.CustName</td>
+                            <td>@item.Orderdate</td>
+                            <td>@item.ShippedDate</td>
+                            <td>@Html.ActionLink("修改", "UpdateOrder", new { id = item.OrderId })</td>
+                            <td>
+                                <a class="btnDelete" href="#">刪除</a>
+                                <input class="hidOrderId" type="hidden" value='@item.OrderId' />
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+            }
+                
+
+    </div>
+}
+
+<script type="text/javascript">
+        
+
+    $(".btnDelete").click(function (e) {
+
+        var tr = $(this).closest('tr')
+        $.ajax({
+            type: "POST",
+            url: "/Order/DeleteOrder",
+            data: "orderId="+$(this).next().val(),
+            dataType: "json",
+            success: function (response) {
+                $(tr).remove();
+            }
+        });
+        return false;
+    });
+
+</script>
