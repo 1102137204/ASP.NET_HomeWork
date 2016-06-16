@@ -115,8 +115,8 @@
                 <input type="button" onclick="javascript:window.history.go(-1);" value="回前一頁">
                 @*@Html.ActionLink("回前一頁", "Index")*@
             </td>
-            <td></td>
-            <td></td>
+            <td>總額</td>
+            <td id="total">0</td>
         </tr>
     </table>
 
@@ -135,8 +135,8 @@
             {
                 <tr>
                     <td>@Html.DropDownListFor(m => Model.OrderDetails[i].ProductId, (List<SelectListItem>)ViewBag.ProductCodeData, new { @class="ProductId"})</td>
-                    <td>@Html.TextBoxFor(m => Model.OrderDetails[i].UnitPrice, new { @class = "UnitPrice", type = "number"})</td>
-                    <td>@Html.TextBoxFor(m => Model.OrderDetails[i].Qty, new { @class = "Qty", type = "number" })</td>
+                    <td>@Html.TextBoxFor(m => Model.OrderDetails[i].UnitPrice, new { @class = "UnitPrice", @onchange = "onchangeValue(this)", type = "number", min = "1" })</td>
+                    <td>@Html.TextBoxFor(m => Model.OrderDetails[i].Qty, new { @class = "Qty", @onchange = "onchangeValue(this)", type = "number", min = "1" })</td>
                     <td>0</td>
                     <td><button type="button" class="btnRemove">取消</button></td>
                 </tr>
@@ -190,6 +190,22 @@
                 $('.UnitPrice').eq(i).attr('name', 'OrderDetails[' + i + '].UnitPrice');
             }
         });
+
+        //當數量、單價改變時，更新小計、總計
+        function onchangeValue(e) {
+
+            console.log("onchangeValue");
+            var price = e.parentNode.parentNode.childNodes[3].childNodes[0].value;
+            var qty = e.parentNode.parentNode.childNodes[5].childNodes[0].value;
+            var subtotal = e.parentNode.parentNode.childNodes[7];
+            subtotal.innerHTML = price * qty;
+            var sum = 0;
+            for (var i = 0 ; i < $('#tbContent tr').length; i++) {
+                sum += $('.Qty').eq(i).val() * $('.UnitPrice').eq(i).val();
+            }
+            $("#total").html(sum);
+            //console.log(sum);
+        }
 
     </script>
 }

@@ -116,7 +116,7 @@
                 @*@Html.ActionLink("回前一頁", "Index")*@
             </td>
             <td>總額</td>
-            <td id="total"></td>
+            <td id="total" >0</td>
         </tr>
     </table>
 
@@ -137,8 +137,8 @@
                     @*<td>@Html.DropDownListFor(m => m.OrderDetails[i].ProductId, (List<SelectListItem>)ViewBag.ProductCodeData, new { @class = "ProductId setOptionSelected", id = "rpc" + Model.OrderDetails[i].ProductId })</td>*@
                     @**<td>@Html.DropDownListFor(m => m.OrderDetails[i].ProductId, (SelectList)ViewBag.ProductCodeData, new { @class = "ProductId setOptionSelected" })</td>*@
                     <td>@Html.DropDownListFor(m => m.OrderDetails[i].ProductId, new SelectList(ViewBag.ProductCodeData, "Value", "Text", Model.OrderDetails[i].ProductId), new { @class = "ProductId setOptionSelected" })</td>
-                    <td>@Html.TextBoxFor(m => m.OrderDetails[i].UnitPrice, new { @class = "UnitPrice", @onchange = "onchangeValue(this)", type = "number" })</td>
-                    <td>@Html.TextBoxFor(m => m.OrderDetails[i].Qty, new { @class = "Qty", @onchange = "onchangeValue(this)", type = "number" })</td>
+                    <td>@Html.TextBoxFor(m => m.OrderDetails[i].UnitPrice, new { @class = "UnitPrice", @onchange = "onchangeValue(this)", type = "number", min = "1"})</td>
+                    <td>@Html.TextBoxFor(m => m.OrderDetails[i].Qty, new { @class = "Qty", @onchange = "onchangeValue(this)", type = "number", min = "1"})</td>
                     <td>@Math.Round(Model.OrderDetails[i].UnitPrice * Model.OrderDetails[i].Qty)</td>
                     <td><button type="button" class="btnRemove">取消</button></td>
                 </tr>
@@ -202,8 +202,10 @@
         }
         document.getElementById("total").innerText = total.toString();*/
 
-        //當數量、單價改變時 重算小計
+        //當數量、單價改變時，更新小計、總計
         function onchangeValue(e) {
+
+            console.log("onchangeValue");
             var price = e.parentNode.parentNode.childNodes[3].childNodes[0].value;
             var qty = e.parentNode.parentNode.childNodes[5].childNodes[0].value;
             var subtotal = e.parentNode.parentNode.childNodes[7];
@@ -215,6 +217,16 @@
             $("#total").html(sum);
             //console.log(sum);
         }
+        //初始化總計
+        function getSum() {
+            var sum = 0;
+            for (var i = 0 ; i < $('#tbContent tr').length; i++) {
+                sum += $('.Qty').eq(i).val() * $('.UnitPrice').eq(i).val();
+            }
+            $("#total").html(sum);
+            //console.log(sum);
+        }
+        getSum();
 
     </script>
 }
